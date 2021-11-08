@@ -6,26 +6,27 @@ const Users = mongoose.model("Users", usersSchema)
 const get = async id => {
     const filter = {}
     id ? filter.id = id : null
-    return await Users.find(filter)
+    return await Users.find(filter).exec()
 }
 
 const save = async data => {
-    return await Users.save(data)
+    const newUser = new Users(data)
+    return await newUser.save()
 }
 
 const update = async (id, data) => {
     if (!id || !data) return false
-    return await Users.findByIdAndUpdate(id, data)
+    return await Users.findByIdAndUpdate(id, data).exec()
 }
 
 const del = async id => {
     if (!id) return false
-    return await Users.findByIdAndDelete(id)
+    return await Users.findByIdAndDelete(id).exec()
 }
 
 const search = async filters => {
     if (typeof params != "object") return false
-    return await Users.find(filters)
+    return await Users.find(filters).exec()
 }
 
 module.exports = {
