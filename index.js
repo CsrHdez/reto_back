@@ -1,6 +1,7 @@
 const express = require("express")
 const routes = require("./Routes")
 const db = require("./Libraries/DB")
+const auth = require("./Middlewares/Auth")
 const app = express()
 
 // Settings
@@ -8,6 +9,7 @@ app.set("port", process.env.PORT || 8000)
 
 // Middlewares
 app.use(express.json())
+auth(app)
 
 // Routes
 app.get("/", (req, res) => {

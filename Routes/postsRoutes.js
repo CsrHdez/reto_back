@@ -1,5 +1,6 @@
 const express = require("express")
 const Posts = require("../Models/postsModel")
+const Auth = require("../Filters/Auth")
 const router = express.Router()
 
 router.get("/", async (req, res, next) => {
@@ -32,7 +33,6 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
     const { postsData } = req.body
     postsData.createdAt = Date.now()
-    postsData._userId = "618968b4141a1895990d5374"
     try {
         const newPosts = await Posts.save(postsData)
         res.status(201).json({
