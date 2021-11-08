@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const usersSchema = require("../Schemas/usersSchema")
+const { encryptPass } = require("../Libraries/Encryption")
 
 const Users = mongoose.model("Users", usersSchema)
 
@@ -10,6 +11,7 @@ const get = async id => {
 }
 
 const save = async data => {
+    data.password = await encryptPass.hashPassword(data.password)
     const newUser = new Users(data)
     return await newUser.save()
 }
