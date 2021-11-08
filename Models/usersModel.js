@@ -5,7 +5,7 @@ const Users = mongoose.model("Users", usersSchema)
 
 const get = async id => {
     const filter = {}
-    id ? filter.id = id : null
+    id ? filter._id = id : null
     return await Users.find(filter).exec()
 }
 

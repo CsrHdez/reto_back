@@ -1,5 +1,6 @@
 const express = require("express")
 const routes = require("./Routes")
+const db = require("./Libraries/DB")
 const app = express()
 
 // Settings
@@ -20,4 +21,11 @@ routes(app)
 // Server running
 app.listen(app.get("port"), () => {
     console.log(`Server running on localhost:${app.get("port")}`)
+    db.connect()
+        .then(() => {
+            console.log("DB Connected")
+        })
+        .catch(err => {
+            console.error("Connection refused ", err)
+        })
 })

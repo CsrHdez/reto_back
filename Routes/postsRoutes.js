@@ -1,54 +1,77 @@
 const express = require("express")
+const Posts = require("../Models/postsModel")
 const router = express.Router()
 
-router.get("/", (req, res) => {
-    res.status(200).json({
-        ok: true,
-        message: "Posts list",
-        payload: [
-            {title: "Posts 1", contentPosts: "<h1>Hola Escuela de Código</h1>\n<p>Contenido de este posts</p>", date: Date.now()},
-            {title: "Posts 2", contentPosts: "<h1>Hola Escuela de Código</h1>\n<p>Contenido de este segundo posts</p>", date: Date.now()}
-        ]
-    })
+router.get("/", async (req, res, next) => {
+    try {
+        const posts = await Posts.get()
+        res.status(200).json({
+            ok: true,
+            message: "Posts list",
+            payload: posts
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res, next) => {
     const { id } = req.params
-    res.status(200).json({
-        ok: true,
-        message: "Posts",
-        payload: {title: "Posts 1", contentPosts: "<h1>Hola Escuela de Código</h1>\n<p>Contenido de este posts</p>", date: Date.now(), id}
-    })
+    try {
+        const posts = await Posts.get(id)
+        res.status(200).json({
+            ok: true,
+            message: "Posts list",
+            payload: posts
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res, next) => {
     const { postsData } = req.body
-    postsData.id = 1
-    res.status(201).json({
-        ok: true,
-        message: "Posts created",
-        payload: postsData
-    })
+    postsData.createdAt = Date.now()
+    postsData._userId = "618968b4141a1895990d5374"
+    try {
+        const newPosts = await Posts.save(postsData)
+        res.status(201).json({
+            ok: true,
+            message: "Posts created",
+            payload: newPosts
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res, next) => {
     const { id } = req.params
     const { postsDataUpdate } = req.body
-    postsDataUpdate.id = parseInt(id)
-    res.status(200).json({
-        ok: true,
-        message: "Posts updated",
-        payload: postsDataUpdate
-    })
+    try {
+        const postsUpdated = await Posts.update(id, postsDataUpdate)
+        res.status(200).json({
+            ok: true,
+            message: "Posts updated",
+            payload: postsUpdated
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res, next) => {
     const { id } = req.params
-    res.status(200).json({
-        ok: true,
-        message: "Posts deleted",
-        payload: id
-    })
+    try {
+        const postsDeleted = await Posts.del(id)
+        res.status(200).json({
+            ok: true,
+            message: "Posts deleted",
+            payload: postsDeleted
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
 module.exports = router
