@@ -10,6 +10,11 @@ const get = async id => {
     return await Users.find(filter).exec()
 }
 
+const getParams = async params =>  {
+    if (typeof params != "object") return false
+    return await Users.findOne(params).exec()
+}
+
 const save = async data => {
     data.password = await encryptPass.hashPassword(data.password)
     const newUser = new Users(data)
@@ -33,6 +38,7 @@ const search = async filters => {
 
 module.exports = {
     get,
+    getParams,
     save,
     update,
     del,
